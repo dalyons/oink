@@ -59,6 +59,11 @@ module Oink
       files = get_file_listing(@args)
 
       handles = files.map { |f| File.open(f) }
+      
+      if handles.empty?
+        puts "no input files, reading from STDIN"
+        handles << STDIN 
+      end
 
       if options[:type] == :memory
 
