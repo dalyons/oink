@@ -43,10 +43,10 @@ module Oink
 
       op.parse!(@args)
 
-      if @args.empty?
-        puts op
-        exit
-      end
+      #if @args.empty?
+        #puts op
+        #exit
+      #end
 
       output = nil
 
