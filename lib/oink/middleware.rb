@@ -14,7 +14,7 @@ module Oink
     end
 
     def call(env)
-      status, headers, body = @app.call(env)
+      status, headers, body = log_memory_increase { @app.call(env) }
 
       log_routing(env)
       log_memory
@@ -40,6 +40,15 @@ module Oink
       if @instruments.include?(:memory)
         memory = Oink::Instrumentation::MemorySnapshot.memory
         @logger.info("Memory usage: #{memory} | PID: #{$$}")
+      end
+    end
+    
+    def log_memory_increase
+      if @instruments.include?(:memory)
+        memory_before = Oink::Instrumentation::MemorySnapshot.memory
+        yield
+        memory_after = Oink::Instrumentation::MemorySnapshot.memory
+        @logger.info("Memory increase: #{memory_after - memory_before} | PID: #{$$}")
       end
     end
 
