@@ -46,9 +46,10 @@ module Oink
     def log_memory_increase
       if @instruments.include?(:memory)
         memory_before = Oink::Instrumentation::MemorySnapshot.memory
-        yield
+        res = yield
         memory_after = Oink::Instrumentation::MemorySnapshot.memory
         @logger.info("Memory increase: #{memory_after - memory_before} | PID: #{$$}")
+        res
       end
     end
 
